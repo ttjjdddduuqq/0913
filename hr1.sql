@@ -1,339 +1,316 @@
-SELECT 
-last_name, salary
+
+SELECT
+last_name,
+length(last_name) 
 FROM hr.employees
-WHERE salary >= 2500
-AND salary <= 3500;
+WHERE last_name LIKE 'J%'
+OR last_name LIKE 'A%'
+OR last_name LIKE 'M%'
+ORDER BY last_name desc;
 
+SELECT
+last_name,
+length(last_name) 
+FROM hr.employees
+WHERE substr(last_name,1,1) = 'J'
+OR substr(last_name,1,1) = 'A'
+OR substr(last_name,1,1) = 'M'
+ORDER BY last_name desc;
+
+SELECT
+last_name,
+length(last_name) 
+FROM hr.employees
+WHERE substr(last_name,1,1) IN ('J','A','M')
+ORDER BY last_name desc;
+
+SELECT
+last_name,
+length(last_name) 
+FROM hr.employees
+WHERE instr(last_name,'J',1,1) = 1
+OR  instr(last_name,'A',1,1) = 1
+OR  instr(last_name,'M',1,1) = 1
+ORDER BY last_name desc;
+
+SELECT
+	trim('a' from 'aabbcaa')
+FROM dual;
+
+SELECT
+	ltrim('aabbcaa','a')
+FROM dual;
+
+SELECT
+	rtrim('aabbcaa','a')
+FROM dual;
+
+SELECT
+    hire_date,
+    ltrim(hire_date, 0)
+FROM hr.employees;
+
+SELECT
+hire_date,
+trim(leading 0 from hire_date)
+FROM hr.employees;
+
+SELECT
+    '   oracle  ',
+    length('   oracle  '),
+    trim('   oracle  '),
+    length(trim('   oracle  '))
+FROM dual;
+
+SELECT
+	replace('100-001', '-', '%'),
+    replace('100-001', '-', ''),
+    replace('100-001', '0', '*'),
+    replace(	'100	001	', ' ', '')
+FROM dual;
+
+SELECT
+	salary,
+	lpad(salary, 10, '*'),
+	rpad(salary, 10, '*')
+FROM hr.employees;
+
+SELECT
+    salary,
+    lpad('*', salary/1000 , '*'),
+    lpad(salary, salary/1000 , '*')
+FROM hr.employees;
+
+SELECT chr(39), chr(35) from dual;
+    
+SELECT 
+    'It''s',
+    replace('It''s', chr (39), ' ') --아스키코드 확인해보자
+FROM dual;
+
+SELECT
+	45.926,
+	round(55.926, 2),
+    round(55.926, 1),
+    round(55.926, 0),
+    round(55.926),
+    round(55.926,-1),
+    round(55.926,-2)
+FROM dual;
+
+SELECT
+	55.926,
+	trunc(55.926, 2),
+    trunc(55.926, 1),
+    trunc(55.926, 0),
+    trunc(55.926),
+    trunc(55.926,-1),
+    trunc(55.926,-2)
+FROM dual;
+
+SELECT
+	round(10.1),
+	ceil(10.1),
+	ceil(10.0),
+	ceil(10.00000001)
+FROM dual;
+
+SELECT
+	trunc(10.1),
+	floor(10.1),
+	floor(10.0),
+	floor(10.00000001)
+FROM dual;
+
+SELECT
+	12/5,
+	MOD(12,5)
+FROM dual;
+
+SELECT
+	2*2*2,
+	power(2,3)
+FROM dual;
+
+SELECT
+	-10,
+	abs(-10)
+FROM dual;
+
+SELECT
+    employee_id,
+    last_name,
+    salary,
+    round(salary * 1.1, 1) as "New Salary" 
+FROM hr.employees;
+
+SELECT
+	sysdate,
+	systimestamp,
+	current_date,
+	current_timestamp,
+	localtimestamp
+FROM dual;
+
+ALTER SESSION SET TIME_ZONE = '+08:00';
+
+SELECT
+	sysdate,
+	systimestamp,
+	current_date,
+	current_timestamp,
+	localtimestamp
+FROM dual;
+
+SELECT
+	sysdate + 100,
+	systimestamp - 100
+FROM dual;
+
+SELECT
+	systimestamp,
+	systimestamp + 10/24,
+	localtimestamp + 10/24,
+	current_timestamp + 10/24
+FROM dual;
+
+ALTER SESSION SET TIME_ZONE = '+09:00';   
+
+SELECT
+	systimestamp,
+	to_char(systimestamp + 10/24, 'yyyy-mm-dd hh24:mi:ss'),
+	to_char(localtimestamp + 10/24, 'yyyy-mm-dd hh24:mi:ss'),
+	to_char(current_timestamp + 10/24, 'yyyy-mm-dd hh24:mi:ss')
+FROM dual;
+
+SELECT
+	systimestamp,
+	to_char(systimestamp + 10/24, 'yyyy-mm-dd hh24:mi:ss'), --10/24  -> 10시 24분
+	to_char(localtimestamp + 10/(24*60), 'yyyy-mm-dd hh24:mi:ss'),-- 10/(24*60) -> 분
+	to_char(current_timestamp + 10/(24*60*60), 'yyyy-mm-dd hh24:mi:ss') --10/(24*60*60) -> 초
+FROM dual;
+
+
+SELECT
+	employee_id,
+	hire_date,
+	sysdate - hire_date
+FROM hr.employees;
+
+SELECT
+	employee_id,
+	hire_date,
+	trunc(sysdate - hire_date)
+FROM hr.employees;
+
+SELECT
+	employee_id,
+	hire_date,
+	trunc(sysdate - hire_date) as 근무일수,
+    months_between(sysdate,hire_date) as 근무달수
+FROM hr.employees;
+
+SELECT
+	sysdate,
+	add_months(sysdate,5),
+	add_months(sysdate,-5)
+FROM dual;
+
+SELECT
+	sysdate,
+	next_day(sysdate, '월요일')
+FROM dual;
+
+ SELECT * FROM nls_session_parameters;
+
+SELECT
+	last_day(sysdate)
+FROM dual;
 
 SELECT 
-last_name, salary
+    employee_id,
+    hire_date,
+    months_between(sysdate,hire_date)
 FROM hr.employees
-WHERE salary < 2500 
-OR salary > 3500;
+WHERE months_between(sysdate,hire_date) >= 240;
 
-desc hr.employees
+SELECT
+    last_name,
+    hire_date,
+    next_day(add_months(hire_date,6),'월요일') as REVIEW
+FROM hr.employees;
+
+SELECT
+    to_char(sysdate + 3/24, 'yyyy-mm-dd hh24:mi:ss.sssss'),
+    to_char(sysdate, ' yyyy year yyyy"년" '),
+    to_char(sysdate, ' mm mon month '),
+    to_char(sysdate, ' d dd ddd day dy '),
+    to_char(sysdate +3/24, 'hh hh12 hh24 am pm' ),
+FROM dual;
+
+SELECT
+    to_char(sysdate, 'ww w')
+    to_char(sysdate, 'q"분기"'),
+    to_char(sysdate, 'dd ddth ddsp ddthsp')
+FROM dual;
+
+SELECT
+    employee_id,
+    hire_date,
+    to_char(hire_date, ' day ')
+FROM hr.employees
+ORDER BY to_char(hire_date-1, ' d ');
+
 
 SELECT * FROM nls_session_parameters;
-
-SELECT *
-FROM hr.employees
-WHERE hire_date >= '01/01/01'
-AND hire_date <= '02/12/31';
-
-SELECT 
-last_name, salary
-FROM hr.employees
-WHERE salary BETWEEN 2500 AND 3500;
-
-SELECT 
-last_name, salary
-FROM hr.employees
-WHERE salary NOT BETWEEN 2500 AND 3500;
-
-SELECT *
-FROM hr.employees
-WHERE hire_date BETWEEN '01/01/01'AND '02/12/31';
-
-SELECT *
-FROM hr.employees
-WHERE last_name BETWEEN 'Abel' AND 'Austin';
-
-SELECT *
-FROM hr.employees
-WHERE employee_id = 100
-OR employee_id = 101
-OR employee_id = 200;
-
-SELECT *
-FROM hr.employees
-WHERE employee_id IN (100,101,200);
-
-SELECT *
-FROM hr.employees
-WHERE employee_id <> 100
-AND employee_id <> 101
-AND employee_id <> 200;
-
-SELECT *
-FROM hr.employees
-WHERE employee_id NOT IN (100,101,200);
-
-SELECT *
-FROM hr.employees
-WHERE department_id = 30
-OR department_id = 50 
-OR department_id = 60
-AND salary > 5000;
-
-SELECT *
-FROM hr.employees
-WHERE department_id = 30
-OR department_id = 50 
-OR (department_id = 60
-AND salary > 5000);
-
-
-SELECT *
-FROM hr.employees
-WHERE (department_id = 30
-OR department_id = 50 
-OR department_id = 60)
-AND salary > 5000;
-
-SELECT *
-FROM hr.employees
-WHERE department_id IN(30,50,60)
-AND salary > 5000;
-
-
-SELECT * 
-FROM hr.employees
-WHERE commission_pct IS NULL;
-
-employees[~employees['COMMISSION_PCT'].isnull()]
-
-SELECT * 
-FROM hr.employees
-WHERE department_id IN (30,50,60)
-AND salary > 500;
-
-SELECT *
-FROM hr.employees
-WHERE last_name LIKE 'K%';
-
-SELECT *
-FROM hr.employees
-WHERE last_name LIKE '__e%';
-
-SELECT
-    job_id
-FROM hr.employees;
-
-SELECT *
-FROM hr.employees
-WHERE hire_date LIKE '02%';
-
-SELECT *
-FROM hr.employees
-WHERE hire_date >= to_date('01/01/01', 'rr/mm/dd')
-AND hire_date <= to_date('02/12/31', 'rr/mm/dd');
-
-
-SELECT *
-FROM hr.employees
-WHERE job_id LIKE 'SA%'
-AND salary >= 10000;
-
-SELECT *
-FROM hr.employees
-WHERE last_name LIKE '__a%'
-OR last_name LIKE '__e%';
-
-SELECT *
-FROM hr.employees
-WHERE job_id LIKE 'SA%'
-AND salary >= 10000
-AND hire_date >= to_date ('2005-01-01','yyyy-mm-dd')
-AND hire_date <= to_date ('2005-12-31','yyyy-mm-dd');
-
-SELECT *
-FROM hr.employees
-WHERE job_id LIKE 'SA%'
-AND salary >= 10000
-AND hire_date BETWEEN to_date('2005-01-01','yyyy-mm-dd')
-AND to_date('2005-12-31','yyyy-mm-dd');
-
-
-SELECT *
-FROM hr.employees
-WHERE (job_id = 'SA_REP'
-OR job_id = 'AD_PRES')
-AND salary > 10000;
-
-SELECT *
-FROM hr.employees
-WHERE job_id IN ('SA_REP','AD_PRES')
-AND salary > 10000;
-
-SELECT
-	employee_id,
-	salary
-FROM hr.employees;
-
-SELECT
-	employee_id,
-	salary
-FROM hr.employees
-ORDER BY salary;
-
-SELECT
-	employee_id,
-	salary
-FROM hr.employees
-ORDER BY salary desc;
-
-SELECT
-	employee_id,
-	salary * 12 "aunnul_salary"
-FROM hr.employees
-ORDER BY "aunnul_salary" asc; 
-
-SELECT
-	employee_id,
-	salary * 12 "aunnul_salary"
-FROM hr.employees
-ORDER BY 2  asc;    --위치 표기법
 
 SELECT
 	employee_id,
 	salary,
-    department_id
-FROM hr.employees
-ORDER BY department_id, salary desc;
-
-SELECT 
-    employee_id,
-    last_name,
-    hire_date
-FROM hr.employees
-WHERE hire_date >= to_date('2006-01-01','yyyy-mm-dd')
-AND hire_date <= to_date('2006-12-31','yyyy-mm-dd')
-ORDER BY last_name asc;
-
-
-SELECT 
-    employee_id,
-    last_name,
-    salary
-FROM hr.employees
-WHERE department_id = 80 
-AND (commission_pct = 0.2
-AND job_id = 'SA_MAN')
-ORDER BY last_name;
-
-
-SELECT
-    last_name,
-    salary
-FROM hr.employees
-WHERE salary < 5000
-OR salary > 12000
-ORDER BY salary desc;
-
-desc hr.employees
-
-SELECT
-    last_name,
-    salary
-FROM hr.employees
-WHERE salary NOT BETWEEN 5000 AND 12000
-ORDER BY salary desc;
-
-SELECT
-	last_name,
-	upper(last_name)
+	to_char(salary,'$999,999.99'),
+    to_char(salary,'l999,999.99'),
+    to_char(salary,'999,999.99'),
+    to_char(salary,'000,999.99'),
+    to_char(salary,'999G999D99')
 FROM hr.employees;
 
 SELECT
-	last_name,
-	upper(last_name),
-	lower(last_name),
-	initcap(last_name)
-FROM hr.employees;
+    -1000,
+    1000,
+    to_char(-1000, '9999mi'),
+    to_char(-1000, '9999pr'),
+    to_char(1000, '9999'),
+    to_char(1000, 's9999')
+FROM dual;
 
-SELECT *
-FROM hr.employees 
-WHERE lower(last_name) = 'king'
-
-SELECT
-	last_name||first_name,
-	concat(last_name,first_name)
-FROM hr.employees;
-
-SELECT
-	last_name||' '||first_name,
-	concat(last_name||'',first_name)
-FROM hr.employees;
-
-SELECT
-	last_name||first_name||job_id,
-	concat(concat(last_name,first_name),job_id)
-FROM hr.employees;
-
-SELECT
-	lower(last_name||first_name||job_id),
-	lower(concat(concat(last_name,first_name),job_id))
-FROM hr.employees;
-
-SELECT
-    concat(concat(last_name,' '),first_name)
-FROM hr.employees;
-
-SELECT
-	last_name,
-	length(last_name)
-FROM hr.employees;
-
-SELECT
-	last_name,
-	length(last_name),
-	lengthb(last_name)
-FROM hr.employees;
-
+ALTER SESSION SET nls_language = korean;
+ALTER SESSION SET nls_territory = korea;
 SELECT * FROM nls_session_parameters;
-SELECT * FROM nls_database_parameters;
-
 SELECT
-    length('오라클'),
-    lengthb('오라클')
-FROM dual;   -- dummy table ( 가상테이블 )
-
-SELECT
-	last_name,
-	instr(last_name,'a'),
-    instr(last_name, 'a',1,1),
-    instr(last_name, 'a',1,2),
-    instr(last_name, 'a',3,1)
+    hire_date,
+    to_char(hire_date, 'day month'),
+    to_char(salary, 'L999G999D00')
 FROM hr.employees;
 
-SELECT *
-FROM hr.employees
-WHERE instr(last_name,'a',3,1) = 3
-OR instr(last_name,'e',3,1) = 3;
-
-SELECT *
-	last_name,
-	substr(last_name,1,2,),
-    substr(last_name,3),
-    substr(last_name,length(last_name),1),
-    substr(last_name,-1,1),
-    substr(last_name,-2,-2)
+ALTER SESSION SET nls_language = japanese;
+ALTER SESSION SET nls_territory = japan;
+SELECT * FROM nls_session_parameters;
+SELECT
+    hire_date,
+    to_char(hire_date, 'day month'),
+    to_char(salary, 'L999G999D00')
 FROM hr.employees;
 
+
+ALTER SESSION SET nls_language = 'simplified chinese';
+ALTER SESSION SET nls_territory = china;
+SELECT * FROM nls_session_parameters;
 SELECT
-	last_name,
-	substr(last_name,-1,2)
+    hire_date,
+    to_char(hire_date, 'day month'),
+    to_char(salary, 'L999G999D00')
 FROM hr.employees;
 
-SELECT
-	substr('abcde',1,2),
-	substrb('abcde',1,2)
-FROM DUAL;
-
-SELECT
-	substr('가나다라마',1,2),
-	substrb('가나다라마',1,2),
-    substrb('가나다라마',1,6)
-FROM DUAL;
-
-SELECT
-    last_name,
-    substr(last_name,1,2),                                 
-    substr(last_name,3),                                    
-    substr(last_name,length(last_name),1),           
-    substr(last_name,-1,1),                          
-    substr(last_name,-2,-2)
-FROM hr.employees;
 
 
 
