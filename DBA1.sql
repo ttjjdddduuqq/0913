@@ -152,5 +152,3 @@ SELECT
 	current_timestamp,
 	localtimestamp
 FROM dual;
-
-ALTER SESSION SET TIME_ZONE = '+08:00'; 
