@@ -1,139 +1,295 @@
-SELECT e.employee_id, e.salary, e.department_id, c.num_emp, e.salary/c.num_emp
-FROM ( SELECT department_id, COUNT(*) num_emp
-FROM hr.employees
-GROUP BY department_id) c, hr.employees e
-WHERE e.department_id = c.department_id
-ORDER BY 1;
+DECLARE
+    v_cnt number := 1;
+BEGIN
+    LOOP
+        IF v_cnt = 4 OR v_cnt = 8 THEN
+            NULL;
+        ELSE
+            dbms_output.put_line(v_cnt);
+        END IF;
+        v_cnt := v_cnt + 1;
+        IF v_cnt > 10 then
+            EXIT;
+        END IF;
+    END LOOP;
+END;
+/
+
+DECLARE
+    v_cnt number := 1;
+BEGIN
+    LOOP
+        IF v_cnt <> 4 AND v_cnt <> 8 THEN
+            dbms_output.put_line(v_cnt);
+        END IF;
+        v_cnt := v_cnt + 1;
+        IF v_cnt > 10 then
+            EXIT;
+        END IF;
+    END LOOP;
+END;
+/
+
+DECLARE
+    v_cnt number := 0;
+BEGIN
+    LOOP
+        v_cnt := v_cnt + 1;
+        CONTINUE WHEN mod(v_cnt,2) = 0;
+        dbms_output.put_line(v_cnt);
+        EXIT WHEN v_cnt = 9;
+    END LOOP;
+END;
+/
+
+DECLARE
+    i number := 1;
+BEGIN
+    LOOP
+        dbms_output.put_line('2 * '||i||' = '||2*i);
+        i := i + 1;
+        EXIT WHEN i = 10;
+    END LOOP;
+END;
+/
+
+DECLARE
+    i number := 0;
+BEGIN
+    LOOP
+        IF mod(i,2) <> 0 THEN
+            dbms_output.put_line(i);
+        END IF;
+        i := i + 1;
+        EXIT WHEN i > 10;
+    END LOOP;
+END;
+/
+
+DECLARE
+    i number := 1;
+BEGIN
+    LOOP
+        dbms_output.put_line(i);
+        i := i + 2;
+        EXIT WHEN i > 10;
+    END LOOP;
+END;
+/
+
+
+DECLARE
+    dan number := 2;
+    i number;
+BEGIN
+    LOOP
+        i := 1;
+        LOOP
+            dbms_output.put_line(dan||' * '||i||' = '||dan*i);
+            EXIT WHEN i =9;
+            i := i + 1;
+        END LOOP;
+        EXIT WHEN dan = 9;
+        dan := dan + 1;
+    END LOOP;
+END;
+/
+
+DECLARE
+dan number := 2;
+i number;
+BEGIN
+WHILE TRUE LOOP
+i := 1;
+WHILE TRUE LOOP
+dbms_output.put_line(dan||' * '||i||' = '||dan*i);
+EXIT WHEN i =9;
+i := i + 1;
+END LOOP;
+EXIT WHEN dan = 9;
+dan := dan + 1;
+END LOOP;
+END;
+/
+
+
+DECLARE
+dan number := 2;
+i number;
+BEGIN
+WHILE dan <= 9 LOOP
+i := 1;
+WHILE i <= 9 LOOP
+dbms_output.put_line(dan||' * '||i||' = '||dan*i);
+i := i + 1;
+END LOOP;
+dan := dan + 1;
+END LOOP;
+END;
+/
+
+BEGIN
+    FOR dan IN 2..9 LOOP
+        FOR i IN 1..9 LOOP
+            dbms_output.put_line(dan||' * '||i|| ' = '||dan*i);
+        END LOOP;
+    END LOOP;
+END;
+/
 
 
 
-WITH
-    CNT_DEPT AS(
-                SELECT department_id, count(*) num_emp
-                FROM employees
-                GROUP BY department_id
-                )
-SELECT  e.employee_id, e.salary, e.department_id, c.num_emp, e.salary/c.num_emp
-FROM hr.employees e, CNT_DEPT c
-WHERE e.department_id = c.department_id
-ORDER BY 1;
+DECLARE
+    i number := 1;
+    v_string varchar2(10);
+BEGIN
+    LOOP
+        v_string := v_string ||i;
+        EXIT WHEN i = 5;
+        i := i + 1;
+    END LOOP;
+    dbms_output.put_line(v_string);
+END;
+/
 
+DECLARE
+i number := 1;
+BEGIN
+LOOP
+dbms_output.put(i);
+EXIT WHEN i = 5;
+i := i + 1;
+END LOOP;
+dbms_output.new_line();
+END;
+/
 
+DECLARE
+i number := 10;
+BEGIN
+WHILE i <= 10 LOOP
+dbms_output.put_line(i);
+i := i - 1;
+EXIT WHEN i = 0;
+END LOOP;
+END;
+/
 
-CREATE GLOBAL TEMPORARY TABLE cnt_dept
-(department_id number, num_emp number)
-ON COMMIT DELETE ROWS;
-
-desc cnt_dept;
-
-INSERT INTO cnt_dept
-SELECT department_id, count(*) num_emp
-FROM employees
-GROUP BY department_id;
-
-SELECT * FROM cnt_dept;
-
-SELECT e.employee_id, e.salary, e.department_id, c.num_emp, e.salary/c.num_emp
-FROM hr.employees e, cnt_dept c
-WHERE e.department_id = c.department_id
-ORDER BY 1;
-
-
-
-
-SELECT d.department_name, e.employee_id, e.salary, e.department_id, sum(salary)
-FROM (SELECT department_id, sum(salary)
-FROM hr.employees
-GROUP BY department_id) e, hr.departments d
-WHERE e.department_id = d.department_id
-ORDER BY 1;
-
-
-SELECT e2.employee_id, e2.salary, e2.department_id, e1.sum_sal
-FROM (SELECT department_id, sum(salary) sum_sal
-        FROM hr.employees
-        GROUP BY department_id) e1, hr.employees e2
-WHERE e1.department_id = e2.department_id
-ORDER BY 1;
-
-
-
-
-
-SELECT
-e.employee_id,
-e.salary,
-d.department_name
-FROM hr.employees e, hr.departments d
-WHERE e.department_id = d.department_id
-AND e.salary > (SELECT avg(salary) FROM hr.employees
-WHERE department_id = e.department_id);
-
-
-
-
-SELECT e.employee_id, e.salary,(SELECT department_name
-FROM hr.departments
-WHERE department_id = e.department_id) dept_name
-FROM employees e
-WHERE e.salary > (SELECT avg(salary)
-FROM employees
-WHERE department_id = e.department_id);
-
-
-
-SELECT e2.employee_id, e2.salary, d.department_name
-FROM (SELECT department_id, avg(salary) avg_sal
-FROM hr.employees
-GROUP BY department_id) e1, hr.employees e2, hr.departments d
-WHERE e1.department_id = d.department_id
-AND e2.department_id = d.department_id
-AND e2.salary > e1.avg_sal;
+DECLARE
+i number := 10;
+BEGIN
+WHILE i > 0 LOOP
+dbms_output.put_line(i);
+i := i - 1;
+END LOOP;
+END;
+/
 
 
 
 
 
 
-WITH
-    emp AS (SELECT employee_id, salary, department_id
-            FROM hr.employees),
-    dept_avg AS (SELECT department_id, avg(salary) avg_sal
-                FROM emp
-                GROUP BY department_id)
-    SELECT e1.employee_id, e1.salary, d.department_name
-    FROM emp e1, dept_avg e2, hr.departments d
-    WHERE e1.department_id = e2.department_id
-    AND e1.salary > e2.avg_sal
-    AND e1.department_id = d.department_id;
 
-SELECT
-    employee_id, salary, (SELECT department_name
-                            FROM hr.departments
-                            WHERE department_id = e.department_id) dept_name
-FROM(
-SELECT 
-        employee_id, 
-        salary, 
-        department_id, 
-        avg(salary) over(partition by department_id) avg_sal,
-        case when salary > avg(salary) over(partition by department_id) then 1 end case_sal
-FROM hr.employees) e
-WHERE case_sal = 1;
 
-SELECT
-    *
-FROM(
-        SELECT 
-            employee_id,
-            salary,
-            department_id,
-            dense_rank() over(partition by department_id order by salary desc) 순위 --rank
-        FROM hr.employees)
-WHERE "순위" <= to_char(2);
---WHERE rank <= 2;
 
-        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
